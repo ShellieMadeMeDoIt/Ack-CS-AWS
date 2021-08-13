@@ -6,12 +6,14 @@ param(
     [string] $ClientId,
     [Parameter(Mandatory = $true)]
     [ValidatePattern('\w{40}')]
-    [string] $ClientSecret
+    [string] $ClientSecret,
+    [Parameter(Mandatory = $true)]
+    [string] $BaseURL
 )
 begin {
     <# USER CONFIG ###############################################################################################>
     # OAuth2 Client with 'sensor-update-policies:read' and 'sensor-installers:read' permissions
-    [string] $ApiHost = 'https://api.crowdstrike.com'
+    [string] $ApiHost = "https://$BaseURL"
 
     # Member CID, input when installing the sensor in a parent/child CID configuration [default: $null]
     [string] $MemberCID = $null
@@ -157,11 +159,11 @@ begin {
     $ProgressPreference = 'SilentlyContinue'
 }
 process {
-    if (Get-Service | Where-Object { $_.Name -eq 'CSFalconService' }) {
-        $ErrorMessage = 'CrowdStrike Falcon service detected.'
-        $ApiClient.Log('ERROR', $ErrorMessage)
-        throw $ErrorMessage
-    }
+    #if (Get-Service | Where-Object { $_.Name -eq 'CSFalconService' }) {
+    #    $ErrorMessage = 'CrowdStrike Falcon service detected.'
+    #    $ApiClient.Log('ERROR', $ErrorMessage)
+    #    throw $ErrorMessage
+    #}
     # Initiate ApiClient
     $ClientParam = @{
         ClientId = $ClientId
